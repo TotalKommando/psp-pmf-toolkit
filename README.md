@@ -45,7 +45,7 @@ Options:
 | `--budget-kb` | 450 | target file-size budget (XMB limit is ~500 KB, shared with SND0.AT3 if present) |
 | `-o` | `ICON1.PMF` | output path |
 
-## Why the PMF conversion was glitching out (the short version)
+## Why the PMF conversion was glitching out
 
 The XMB icon player is **not** a general PMF player. It has a small fixed
 ring buffer sized for Sony's icon encoding regime. Converters that produce
