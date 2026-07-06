@@ -721,6 +721,21 @@ def extract_at3p_frames(blob):
     sys.exit('unrecognized encoder output container')
 
 
+AT3_END_PAD = 368        # at3tool leaves >=368 samples of tail margin
+
+
+def clamp_fact_samples(nsamples, n_frames, spf, delay):
+    """XMB rejects files whose fact chunk claims more samples than the
+    frames can decode. Known-good at3tool files keep samples + delay +
+    368 <= frames*spf; mirror that."""
+    cap = n_frames * spf - delay - AT3_END_PAD
+    if cap <= 0:
+        sys.exit('audio too short after delay/padding accounting')
+    if nsamples > cap:
+        print('fact clamp: %d -> %d samples (frames=%d)' % (nsamples, cap, n_frames))
+    return min(nsamples, cap)
+
+
 def assemble_at3(out, fmt, data, nsamples, delay):
     smpl = bytearray(AT3_SMPL_TMPL)
     struct.pack_into('<I', smpl, 44, delay)
@@ -746,6 +761,8 @@ def write_snd0_at3p(out, frames_info, nsamples):
         fmt[43] = frame_bytes // 8 - 1
         print('note: %d-byte frames (%d bps) - differs from Sony 376/64768'
               % (frame_bytes, bytes_per_sec * 8))
+    nsamples = clamp_fact_samples(nsamples, len(data) // frame_bytes,
+                                  AT3_SAMPLES_PER_FRAME, AT3_DELAY)
     assemble_at3(out, fmt, data, nsamples, AT3_DELAY)
 
 
@@ -768,6 +785,7 @@ def write_snd0_at3(out, remuxed_wav, nsamples):
         sys.exit('remux produced fmt tag %#x, expected ATRAC3 0x0270' % tag)
     ba, = struct.unpack_from('<H', fmt, 12)
     print('ATRAC3: blockAlign=%d (%d bps)' % (ba, ba * 8 * 44100 // 1024))
+    nsamples = clamp_fact_samples(nsamples, len(data) // ba, 1024, 1024)
     assemble_at3(out, fmt, data, nsamples, 1024)
 
 

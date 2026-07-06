@@ -126,19 +126,35 @@ must match). This pipeline is confirmed working on real hardware.
 The wrapper implementation reproduces the Sony sample **byte-for-byte** from
 its raw frames.
 
-### 2.3 Hardware test results
+### 2.3 The fact-capacity invariant (probable make-or-break rule)
 
-| attempt | result |
-|---|---|
-| ATRAC3+ 352.8 kbps (atracdenc, only rate it can do) — tested at 574 KB and 456 KB combined | silent |
-| plain ATRAC3 66 kbps (atracdenc LP4, guides claim this works) | silent |
-| real GTA SND0.AT3 dropped in unchanged | **plays** |
+Every known-good file obeys:
 
-Conclusion: mechanism and wrapper fine; the PSP rejects atracdenc's 352.8 kbps
-ATRAC3+ and plain ATRAC3. A real encoder at 48–128 kbps ATRAC3+ is required —
-i.e. Sony `at3tool.exe` (`at3tool -e -br 64 -wholeloop in.wav SND0.AT3`).
-ffmpeg has no ATRAC3/ATRAC3+ encoder; atracdenc's ATRAC3+ frame size is
-hardcoded to 2048 bytes in source.
+```
+fact.samples + fact.delay + 368 <= n_frames * samples_per_frame
+```
+
+Four of five at3tool files have a tail margin of **exactly 368 samples**
+(the non-looping one has a plain ceil margin). Every file that failed on
+hardware **overclaimed** — its `fact` promised more samples than the frames
+can decode (even by as little as 309). Even known-good GTA *frames*, trimmed
+and rewrapped with an overclaiming `fact`, go silent. The tool now clamps
+`fact.samples` to `capacity - delay - 368` (`clamp_fact_samples`).
+
+### 2.4 Hardware test results
+
+| attempt | fact fits? | result |
+|---|---|---|
+| ATRAC3+ 352.8 kbps (atracdenc) — 574 KB and 456 KB combined | no (−309) | silent |
+| plain ATRAC3 66 kbps (atracdenc LP4) | no (−561) | silent |
+| GTA frames trimmed to 5 s, naive fact | no (−3311) | silent |
+| real GTA SND0.AT3 unchanged | yes | **plays** |
+| v2 set (above three with clamped fact) | yes | pending |
+
+If the v2 files still fail, fall back to the bitrate theory: only ATRAC3+
+48–128 kbps plays, which requires Sony `at3tool.exe`
+(`at3tool -e -br 64 -wholeloop in.wav SND0.AT3`). ffmpeg has no ATRAC3/
+ATRAC3+ encoder; atracdenc's ATRAC3+ frame size is hardcoded to 2048 bytes.
 
 ## 3. EBOOT.PBP notes
 
