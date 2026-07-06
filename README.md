@@ -126,8 +126,8 @@ pbp      <donor.pbp> [-o out] [--icon1 F] [--snd0 F] [--title S]
 
 ## Credits
 
-- **BLUE** — [Custom ARK-V (ARK-5)](https://github.com/PSP-Arkfive/ARK-5)
-  and the animated ICON1.PMF work that prompted this investigation, plus the
+- **@Blue** — [Custom ARK-5 Installer animations](https://github.com/PSP-Arkfive/ARK-5)
+ ICON1.PMF work that prompted this investigation, plus the
   reference samples used to crack the formats.
 - **@GrayJack** — independently figured out working AT3 icon sound.
 - **[atracdenc](https://github.com/dcherednik/atracdenc)** by Dmitry
