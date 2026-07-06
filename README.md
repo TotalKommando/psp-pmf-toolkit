@@ -83,7 +83,7 @@ executable is untouched.
 
 Not solved yet. Findings so far (all verified on hardware):
 
-**AT3 Apparently already is figured out by @GrayJack so I left it here**
+**AT3 was apparently already figured out by @GrayJack so I left it here**
 
 - Every known-good `SND0.AT3` (from retail games and homebrew) is
   **ATRAC3+, 48–128 kbps, 44.1 kHz stereo** in a RIFF wrapper with `fact` +
