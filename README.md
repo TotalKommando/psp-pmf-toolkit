@@ -1,5 +1,7 @@
 # psp-pmf-toolkit
 
+[Was created/generated using Claude to figure out why @Blue's ARK-V's new animated ICON1.PMF files were glitching out or blacking out]
+
 Convert any video into a **working `ICON1.PMF`** for PSP homebrew EBOOTs — the
 animated icon that plays in the XMB Game menu. Byte-matched to Sony's own icon
 format by reverse-engineering official samples, and **verified on real PSP
