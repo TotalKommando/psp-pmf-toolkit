@@ -129,7 +129,6 @@ pbp      <donor.pbp> [-o out] [--icon1 F] [--snd0 F] [--title S]
 - **@Blue** — [Custom ARK-5 Installer animations](https://github.com/PSP-Arkfive/ARK-5)
  ICON1.PMF work that prompted this investigation, plus the
   reference samples used to crack the formats.
-- **@GrayJack** — independently figured out working AT3 icon sound at an earlier stage using sony tools.
 - **[atracdenc](https://github.com/dcherednik/atracdenc)** by Dmitry
   Cherednik — the open-source ATRAC1/ATRAC3/ATRAC3+ encoder that makes the
   fully-FOSS SND0.AT3 pipeline possible.
